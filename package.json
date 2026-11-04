@@ -1,0 +1,15 @@
+{
+  "name": "kript-exchange",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @kript/wallet-core",
+    "postinstall": "npm run build -w @kript/wallet-core",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "mobile": "npm start -w @kript/mobile"
+  }
+}

@@ -1,0 +1,80 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      network:
+        description: 'Сеть: testnet (тестовые монеты) или mainnet (реальные деньги)'
+        type: choice
+        options: [testnet, mainnet]
+        default: testnet
+
+concurrency:
+  group: apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      NETWORK: ${{ inputs.network || 'testnet' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: App config (.env from repository secrets)
+        working-directory: apps/mobile
+        env:
+          ZEROEX: ${{ secrets.EXPO_PUBLIC_0X_API_KEY }}
+          JUP: ${{ secrets.EXPO_PUBLIC_JUP_API_KEY }}
+          ALCHEMY: ${{ secrets.EXPO_PUBLIC_ALCHEMY_KEY }}
+          HELIUS: ${{ secrets.EXPO_PUBLIC_HELIUS_KEY }}
+          TRONGRID: ${{ secrets.EXPO_PUBLIC_TRONGRID_KEY }}
+          FEE_RECIPIENT: ${{ secrets.EXPO_PUBLIC_FEE_RECIPIENT_EVM }}
+        run: |
+          {
+            echo "EXPO_PUBLIC_NETWORK=$NETWORK"
+            echo "EXPO_PUBLIC_0X_API_KEY=$ZEROEX"
+            echo "EXPO_PUBLIC_JUP_API_KEY=$JUP"
+            echo "EXPO_PUBLIC_ALCHEMY_KEY=$ALCHEMY"
+            echo "EXPO_PUBLIC_HELIUS_KEY=$HELIUS"
+            echo "EXPO_PUBLIC_TRONGRID_KEY=$TRONGRID"
+            echo "EXPO_PUBLIC_FEE_RECIPIENT_EVM=$FEE_RECIPIENT"
+            echo "EXPO_PUBLIC_FEE_BPS=30"
+            echo "EXPO_PUBLIC_COW_FEE_BPS=20"
+            echo "EXPO_PUBLIC_JUP_REFERRAL_BPS=50"
+          } > .env
+
+      - name: Generate Android project
+        working-directory: apps/mobile
+        run: npx expo prebuild --platform android --no-install --clean
+
+      - name: Build APK
+        working-directory: apps/mobile/android
+        run: ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kript-${{ env.NETWORK }}-${{ github.run_number }}
+          path: apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 14

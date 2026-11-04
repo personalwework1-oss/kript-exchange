@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Kript",
+    "slug": "kript",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.kript.app",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Face ID используется для входа в кошелёк и подтверждения переводов."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0B0F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.kript.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Face ID используется для входа в кошелёк и подтверждения переводов."
+        }
+      ],
+      "expo-font",
+      "expo-splash-screen"
+    ],
+    "scheme": "kript",
+    "backgroundColor": "#0A0B0F",
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

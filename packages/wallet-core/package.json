@@ -1,0 +1,46 @@
+{
+  "name": "@kript/wallet-core",
+  "version": "0.1.0",
+  "main": "./dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.4.0",
+    "@noble/curves": "^2.4.0",
+    "@noble/hashes": "^2.4.0",
+    "@scure/base": "^2.4.0",
+    "@scure/bip32": "^2.4.0",
+    "@scure/bip39": "^2.4.0",
+    "@scure/btc-signer": "^2.4.1",
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0",
+    "viem": "^2.57.14"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@uniswap/default-token-list": "^22.33.0",
+    "bitcoinjs-lib": "^7.0.5",
+    "ecpair": "^3.0.2",
+    "ed25519-hd-key": "^2.0.0",
+    "tiny-secp256k1": "^2.2.5",
+    "tronweb": "^6.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "type": "module",
+  "private": true,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}
