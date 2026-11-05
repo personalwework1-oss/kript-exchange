@@ -34,7 +34,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
+      # Android SDK is preinstalled on ubuntu-latest runners (ANDROID_HOME).
+      - name: Android SDK
+        run: echo "ANDROID_HOME=$ANDROID_HOME" && ls "$ANDROID_HOME"
 
       - name: Install
         run: npm ci
